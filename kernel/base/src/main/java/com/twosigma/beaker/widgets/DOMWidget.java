@@ -29,6 +29,7 @@ public abstract class DOMWidget extends Widget {
 
   public static final String DATA = "data";
   public static final String SYNC_DATA = "sync_data";
+  public static final String WIDTH = "width";
 
   private Layout layout;
 
@@ -101,10 +102,22 @@ public abstract class DOMWidget extends Widget {
     content.put("font_weight", "");
     content.put("background_color", null);
     content.put("color", null);
+    content.put(WIDTH, getWidth());
     return content;
   }
 
+  private Integer width;
+
   public Layout getLayout() {
     return layout;
+  }
+
+  public Integer getWidth() {
+    return width;
+  }
+
+  public void setWidth(Integer width) {
+    this.width = width;
+    sendUpdate(WIDTH, width);
   }
 }

@@ -84,9 +84,9 @@ public class ImageTest {
     //given
     Image widget = image();
     //when
-    widget.setWidth("321");
+    widget.setWidth(321);
     //then
-    TestWidgetUtils.verifyMsgForProperty(groovyKernel, Image.WIDTH, "321");
+    TestWidgetUtils.verifyMsgForProperty(groovyKernel, Image.WIDTH, 321);
   }
 
   private Image image() throws NoSuchAlgorithmException {

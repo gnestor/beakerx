@@ -25,7 +25,6 @@ public class Layout extends Widget {
   public static final String DISPLAY = "display";
   public static final String ALIGN_ITEMS = "align_items";
   public static final String FLEX_FLOW = "flex_flow";
-  public static final String WIDTH = "width";
 
   private String _view_name = "LayoutView";
   private String _model_name = "LayoutModel";
@@ -68,7 +67,6 @@ public class Layout extends Widget {
     content.put("right", "");
     content.put("top", "");
     content.put("visibility", "");
-    content.put(WIDTH, getWidth()+"px");
 
     return content;
   }
@@ -99,14 +97,5 @@ public class Layout extends Widget {
   public void setFlex_flow(String flex_flow) {
     this.flex_flow = flex_flow;
     sendUpdate(FLEX_FLOW, flex_flow);
-  }
-
-  public Integer getWidth() {
-    return width;
-  }
-
-  public void setWidth(Integer width) {
-    this.width = width;
-    sendUpdate(WIDTH, width+"px");
   }
 }

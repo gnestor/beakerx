@@ -68,15 +68,6 @@ public class Image extends ValueWidget<byte[]> {
     sendUpdate(FORMAT, this.format);
   }
 
-  public String getWidth() {
-    return width;
-  }
-
-  public void setWidth(String width) {
-    this.width = width;
-    sendUpdate(WIDTH, this.width);
-  }
-
   public String getHeight() {
     return height;
   }
