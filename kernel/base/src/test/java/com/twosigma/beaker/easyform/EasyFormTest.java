@@ -252,7 +252,7 @@ public class EasyFormTest {
   }
 
   private void verifyTextField(List<Message> messages) {
-    verifyOpenCommMsg(messages, Text.MODEL_NAME_VALUE, Text.VIEW_NAME_VALUE);
+    verifyInternalOpenCommMsgWitLayout(messages, Text.MODEL_NAME_VALUE, Text.VIEW_NAME_VALUE);
   }
 
   private void verifyChildren(Message message, List<CommFunctionality> children) {

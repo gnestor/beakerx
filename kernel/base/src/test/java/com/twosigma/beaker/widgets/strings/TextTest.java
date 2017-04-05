@@ -23,6 +23,8 @@ import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
 
+import static com.twosigma.beaker.widgets.TestWidgetUtils.verifyInternalOpenCommMsg;
+import static com.twosigma.beaker.widgets.TestWidgetUtils.verifyInternalOpenCommMsgWitLayout;
 import static com.twosigma.beaker.widgets.TestWidgetUtils.verifyMsgForProperty;
 import static com.twosigma.beaker.widgets.TestWidgetUtils.verifyOpenCommMsg;
 
@@ -47,7 +49,7 @@ public class TextTest {
     //when
     new Text();
     //then
-    verifyOpenCommMsg(groovyKernel.getPublishedMessages(), Text.MODEL_NAME_VALUE, Text.VIEW_NAME_VALUE);
+    verifyInternalOpenCommMsgWitLayout(groovyKernel.getPublishedMessages(), Text.MODEL_NAME_VALUE, Text.VIEW_NAME_VALUE);
   }
 
   @Test
