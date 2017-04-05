@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import static com.twosigma.beaker.jupyter.Utils.uuid;
 
-public class ClojureKernel  extends Kernel {
+public class ClojureKernel extends Kernel {
 
 
   public ClojureKernel(String sessionId, Evaluator evaluator, ConfigurationFile configurationFile) {

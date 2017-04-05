@@ -47,23 +47,23 @@ public class ClojureEvaluator implements Evaluator {
 
   private final static Logger logger = LoggerFactory.getLogger(ClojureEvaluator.class.getName());
 
-  protected final String shellId;
-  protected final String sessionId;
-  protected List<String> classPath;
-  protected List<String> imports;
-  protected List<String> requirements;
-  protected boolean exit;
-  protected boolean updateLoader;
-  protected BeakerCellExecutor executor;
-  protected workerThread myWorker;
-  protected String currentClassPath = "";
-  protected String currentImports = "";
-  protected String outDir = "";
-  protected String currenClojureNS;
-  protected String currentRequirements = "";
-  protected DynamicClassLoaderSimple loader;
+  private final String shellId;
+  private final String sessionId;
+  private List<String> classPath;
+  private List<String> imports;
+  private List<String> requirements;
+  private boolean exit;
+  private boolean updateLoader;
+  private BeakerCellExecutor executor;
+  private workerThread myWorker;
+  private String currentClassPath = "";
+  private String currentImports = "";
+  private String outDir;
+  private String currenClojureNS;
+  private String currentRequirements = "";
+  private DynamicClassLoaderSimple loader;
 
-  protected class jobDescriptor {
+  private class jobDescriptor {
     String codeToBeExecuted;
     SimpleEvaluationObject outputObject;
 
@@ -73,12 +73,12 @@ public class ClojureEvaluator implements Evaluator {
     }
   }
 
-  protected static final String beaker_clojure_ns = "beaker_clojure_shell";
-  protected Var clojureLoadString = null;
-  protected final Semaphore syncObject = new Semaphore(0, true);
-  protected final ConcurrentLinkedQueue<jobDescriptor> jobQueue = new ConcurrentLinkedQueue<jobDescriptor>();
+  private static final String beaker_clojure_ns = "beaker_clojure_shell";
+  private Var clojureLoadString = null;
+  private final Semaphore syncObject = new Semaphore(0, true);
+  private final ConcurrentLinkedQueue<jobDescriptor> jobQueue = new ConcurrentLinkedQueue<jobDescriptor>();
 
-  protected String initScriptSource()
+  private String initScriptSource()
           throws IOException {
     URL url = this.getClass().getClassLoader().getResource("init_clojure_script.txt");
     return Resources.toString(url, Charsets.UTF_8);
@@ -90,9 +90,11 @@ public class ClojureEvaluator implements Evaluator {
     classPath = new ArrayList<String>();
     imports = new ArrayList<String>();
     requirements = new ArrayList<>();
+    outDir = Evaluator.createJupyterTempFolder().toString();
+    init();
   }
 
-  public void init() {
+  private void init() {
 
     loader = new DynamicClassLoaderSimple(ClassLoader.getSystemClassLoader());
     loader.addJars(classPath);
@@ -103,7 +105,7 @@ public class ClojureEvaluator implements Evaluator {
 
     try {
       String clojureInitScript = String.format(initScriptSource(), beaker_clojure_ns, shellId,
-              loadFunctionPrefix, NSClientProxy.class.getName(), sessionId);
+              loadFunctionPrefix);
       clojureLoadString = RT.var(String.format("%1$s_%2$s", beaker_clojure_ns, shellId),
               String.format("%1$s_%2$s", loadFunctionPrefix, shellId));
       clojure.lang.Compiler.load(new StringReader(clojureInitScript));
@@ -181,7 +183,7 @@ public class ClojureEvaluator implements Evaluator {
     syncObject.release();
   }
 
-  protected class workerThread extends Thread {
+  private class workerThread extends Thread {
 
     public workerThread() {
       super("clojure worker");
@@ -215,12 +217,12 @@ public class ClojureEvaluator implements Evaluator {
       }
     }
 
-    protected class MyRunnable implements Runnable {
+    private class MyRunnable implements Runnable {
 
-      protected final String theCode;
-      protected final SimpleEvaluationObject theOutput;
+      private final String theCode;
+      private final SimpleEvaluationObject theOutput;
 
-      public MyRunnable(String code, SimpleEvaluationObject out) {
+      private MyRunnable(String code, SimpleEvaluationObject out) {
         theCode = code;
         theOutput = out;
       }
@@ -266,26 +268,10 @@ public class ClojureEvaluator implements Evaluator {
 
   @Override
   public void setShellOptions(String cp, String in) throws IOException {
-
-  }
-
-  public void setShellOptions(String cp, String in, String od, String req) throws IOException {
-
-    if (od == null || od.isEmpty()) {
-      od = FileSystems.getDefault().getPath(System.getenv("beaker_tmp_dir"), "dynclasses", sessionId).toString();
-    } else {
-      od = od.replace("$BEAKERDIR", System.getenv("beaker_tmp_dir"));
-    }
-    // check if we are not changing anything
-    if (currentClassPath.equals(cp) && currentImports.equals(in) && outDir.equals(od) && currentRequirements.equals(req))
-      return;
-
-    outDir = od;
-
     if (!currentClassPath.equals(cp)) {
       currentClassPath = cp;
       if (cp.isEmpty())
-        classPath = new ArrayList<String>();
+        classPath = new ArrayList<>();
       else
         classPath = Arrays.asList(cp.split("[\\s" + File.pathSeparatorChar + "]+"));
     }
@@ -293,19 +279,10 @@ public class ClojureEvaluator implements Evaluator {
     if (!currentImports.equals(in)) {
       currentImports = in;
       if (in.isEmpty())
-        imports = new ArrayList<String>();
+        imports = new ArrayList<>();
       else
         imports = Arrays.asList(in.split("\\s+"));
     }
-
-    if (!currentRequirements.equals(req)) {
-      currentRequirements = req;
-      if (req.isEmpty())
-        requirements = new ArrayList<String>();
-      else
-        requirements = Arrays.asList(req.split("\\R"));
-    }
-
     resetEnvironment();
   }
 
