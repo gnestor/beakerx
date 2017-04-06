@@ -22,6 +22,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.twosigma.beaker.autocomplete.AutocompleteResult;
 import com.twosigma.beaker.evaluator.Evaluator;
+import com.twosigma.beaker.evaluator.InternalVariable;
 import com.twosigma.beaker.jvm.classloader.DynamicClassLoaderSimple;
 import com.twosigma.beaker.jvm.object.SimpleEvaluationObject;
 import com.twosigma.beaker.jvm.threads.BeakerCellExecutor;
@@ -35,7 +36,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -236,6 +236,7 @@ public class ClojureEvaluator implements Evaluator {
         theOutput.setOutputHandler();
         Object result;
         try {
+          InternalVariable.setValue(theOutput);
           Object o = clojureLoadString.invoke(theCode);
           try {
             //workaround, checking of corrupted clojure objects

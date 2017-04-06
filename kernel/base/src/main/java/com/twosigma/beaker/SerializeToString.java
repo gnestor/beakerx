@@ -191,14 +191,7 @@ public class SerializeToString {
     if (result instanceof MIMEContainer) {
       return (MIMEContainer) result;
     }
-    String s = null;
-    try {
-      s = getMapper().writeValueAsString(result);
-    } catch (JsonProcessingException e) {
-    }
-    if (s != null) {
-      return Text(s);
-    }
+
     return result != null ? Text(result) : Text("null");
   }
 
