@@ -15,6 +15,8 @@
  */
 package com.twosigma.beaker.clojure;
 
+import com.twosigma.beaker.clojure.handlers.ClojureCommOpenHandler;
+import com.twosigma.beaker.clojure.handlers.ClojureKernelInfoHandler;
 import com.twosigma.beaker.evaluator.Evaluator;
 import com.twosigma.beaker.jupyter.handler.CommOpenHandler;
 import com.twosigma.jupyter.ConfigurationFile;
@@ -29,19 +31,18 @@ import static com.twosigma.beaker.jupyter.Utils.uuid;
 
 public class ClojureKernel extends Kernel {
 
-
   public ClojureKernel(String sessionId, Evaluator evaluator, ConfigurationFile configurationFile) {
     super(sessionId, evaluator, configurationFile);
   }
 
   @Override
   public CommOpenHandler getCommOpenHandler(Kernel kernel) {
-    return null;
+    return new ClojureCommOpenHandler(kernel);
   }
 
   @Override
   public KernelHandler<Message> getKernelInfoHandler(Kernel kernel) {
-    return null;
+    return new ClojureKernelInfoHandler(kernel);
   }
 
   public static void main(final String[] args) throws InterruptedException, IOException {
